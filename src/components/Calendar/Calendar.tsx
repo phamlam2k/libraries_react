@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import CustomToolbar from "./customToolbar";
-
+import FormDialog from "./Modal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = dayjsLocalizer(dayjs);
 
@@ -27,7 +27,7 @@ const CalendarContent = () => {
   return (
     <div>
       <Calendar
-        views={["day", "agenda", "work_week", "month"]}
+        views={["day", "agenda", "week", "month"]}
         selectable
         localizer={localizer}
         defaultDate={new Date()}
