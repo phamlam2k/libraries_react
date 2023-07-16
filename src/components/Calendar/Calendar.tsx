@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
-
+import CustomToolbar from "./customToolbar";
+import FormDialog from "./Modal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 const localizer = dayjsLocalizer(dayjs);
 
@@ -26,15 +27,18 @@ const CalendarContent = () => {
   return (
     <div>
       <Calendar
-        views={["day", "agenda", "work_week", "month"]}
+        views={["day", "agenda", "week", "month"]}
         selectable
         localizer={localizer}
         defaultDate={new Date()}
         defaultView="month"
         events={eventsData}
-        style={{ height: "100vh" }}
+        style={{ height: "100vh", width: "100%", backgroundColor: "white" }}
         onSelectEvent={(event) => alert(event.title)}
         onSelectSlot={handleSelect}
+        components={{
+        toolbar: CustomToolbar
+          }}
       />
     </div>
   );
