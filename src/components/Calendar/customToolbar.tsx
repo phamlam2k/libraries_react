@@ -7,91 +7,87 @@ import Grid from '@mui/material/Grid';
 import {ButtonGroup} from "@mui/material";
 
 function CustomToolbar(props: any) {
+    const { onView, date, onNavigate } = props
     const [viewState, setViewState] = useState("month");
-    const [StudyTimechecked, setStudyTimechecked] = useState(false)
     const getCustomToolbar = () => {
         // const toolbarDate = props.date;
         const goToDayView = () => {
-            props.onView("day");
+            onView("day");
             setViewState("day");
         };
         const goToWeekView = () => {
-            props.onView("week");
+            onView("week");
             setViewState("week");
         };
         const goToMonthView = () => {
-            props.onView("month");
+            onView("month");
             setViewState("month");
         };
         const goToAgendaView = () => {
-            props.onView("agenda");
+            onView("agenda");
             setViewState("agenda");
         };
         const goToBack = () => {
             let view = viewState;
-            let mDate = props.date;
             let newDate;
             if (view === "month") {
-                newDate = new Date(mDate.getFullYear(), mDate.getMonth() - 1, 1);
+                newDate = new Date(date.getFullYear(), date.getMonth() - 1, 1);
             } else if (view === "week") {
                 newDate = new Date(
-                    mDate.getFullYear(),
-                    mDate.getMonth(),
-                    mDate.getDate() - 7,
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate() - 7,
                     1
                 );
             } else {
                 newDate = new Date(
-                    mDate.getFullYear(),
-                    mDate.getMonth(),
-                    mDate.getDate() - 1,
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate() - 1,
                     1
                 );
             }
-            props.onNavigate("prev", newDate);
+            onNavigate("prev", newDate);
         };
         const goToNext = () => {
             let view = viewState;
-            let mDate = props.date;
             let newDate;
             if (view === "month") {
-                newDate = new Date(mDate.getFullYear(), mDate.getMonth() + 1, 1);
+                newDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
             } else if (view === "week") {
                 newDate = new Date(
-                    mDate.getFullYear(),
-                    mDate.getMonth(),
-                    mDate.getDate() + 7,
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate() + 7,
                     1
                 );
             } else {
                 newDate = new Date(
-                    mDate.getFullYear(),
-                    mDate.getMonth(),
-                    mDate.getDate() + 1,
+                    date.getFullYear(),
+                    date.getMonth(),
+                    date.getDate() + 1,
                     1
                 );
             }
-            props.onNavigate("next", newDate);
+            onNavigate("next", newDate);
         };
 
         const goToToday = () => {
             const now = new Date();
-            props.date.setMonth(now.getMonth());
-            props.date.setYear(now.getFullYear());
-            props.date.setDate(now.getDate());
-            props.onNavigate("current");
+            date.setMonth(now.getMonth());
+            date.setYear(now.getFullYear());
+            date.setDate(now.getDate());
+            onNavigate("current");
         };
 
         const goToBackYear = () => {
-            let mDate = props.date;
-            let newDate = new Date(mDate.getFullYear() - 1, 1);
-            props.onNavigate("prev", newDate);
+            let newDate = new Date(date.getFullYear() - 1, 1);
+            onNavigate("prev", newDate);
         };
 
         const goToNextYear = () => {
-            let mDate = props.date;
-            let newDate = new Date(mDate.getFullYear() + 1, 1);
-            props.onNavigate("next", newDate);
+            let newDate = new Date(date.getFullYear() + 1, 1);
+            onNavigate("next", newDate);
         };
 
         const month = () => {
