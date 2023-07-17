@@ -1,8 +1,26 @@
 import prisma from ".";
 
-export const getCalendarDataPrisma = async () => {
+export interface IParamsGetCalendarDataPrisma {
+  page: number;
+  limit: number;
+  keyword: string;
+}
+
+export const getCalendarDataPrisma = async (
+  params: IParamsGetCalendarDataPrisma
+) => {
   try {
-    const calendar = await prisma.calendar.findMany();
+    const { page, limit, keyword } = params;
+
+    const calendar = await prisma.calendar.findMany({
+      where: {
+        name: {
+          contains: keyword,
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
     return { calendar };
   } catch (error) {

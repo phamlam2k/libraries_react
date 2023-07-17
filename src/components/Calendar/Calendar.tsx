@@ -2,12 +2,21 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import CustomToolbar from "./customToolbar";
-import FormDialog from "./Modal";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import useCalendarData from "../../hooks/useCalendarData";
+import { IParamsGetCalendarDataPrisma } from "../../prisma/calendar";
 const localizer = dayjsLocalizer(dayjs);
 
 const CalendarContent = () => {
   const [eventsData, setEventsData] = useState<any[]>([]);
+  const [paramsSearch, setParamsSearch] =
+    useState<IParamsGetCalendarDataPrisma>({
+      page: 1,
+      limit: 10,
+      keyword: "",
+    });
+
+  const { data } = useCalendarData(paramsSearch);
 
   const handleSelect = ({ start, end }: any) => {
     console.log(start);
@@ -37,8 +46,8 @@ const CalendarContent = () => {
         onSelectEvent={(event) => alert(event.title)}
         onSelectSlot={handleSelect}
         components={{
-        toolbar: CustomToolbar
-          }}
+          toolbar: CustomToolbar,
+        }}
       />
     </div>
   );

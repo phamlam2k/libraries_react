@@ -8,7 +8,16 @@ export default async function calendar(
 ) {
   if (req.method === "GET") {
     try {
-      const { calendar, error } = await getCalendarDataPrisma();
+      const { page, limit, keyword } = req.query;
+      const pageQuery = page ?? 1;
+      const limitQuery = limit ?? 10;
+      const keywordQuery = String(keyword ?? "");
+
+      const { calendar, error } = await getCalendarDataPrisma({
+        keyword: keywordQuery,
+        page: Number(pageQuery),
+        limit: Number(limitQuery),
+      });
 
       if (error) throw new Error(error as string);
 
