@@ -1,5 +1,6 @@
 import HomeIcon from "@mui/icons-material/Home";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { BackupTableOutlined } from "@mui/icons-material";
 
 import { ReactElement } from "react";
 
@@ -19,5 +20,10 @@ export const navigate: INavigate[] = [
     name: "Calendar",
     path: "/calendar",
     icon: <CalendarMonthIcon />,
+  },
+  {
+    name: "Table",
+    path: "/table",
+    icon: <BackupTableOutlined />,
   },
 ];
