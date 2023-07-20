@@ -1,4 +1,5 @@
 import exp from "constants";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import axiosInstance from "../../common/axios";
 import {
   IParamsGetProductDataPrisma,
@@ -13,7 +14,6 @@ export const getProductDataApi = async ({
   const { data } = await axiosInstance.get(
     `/product-data?page=${page}&limit=${limit}&keyword=${keyword}`
   );
-
   return data;
 };
 
@@ -21,7 +21,6 @@ export const createProductDataApi = async (
   params: IProductCreateDataPrisma
 ) => {
   const { data } = await axiosInstance.post("/product-data", params);
-
   return data;
 };
 
