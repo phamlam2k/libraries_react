@@ -1,6 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getCalendarDataPrisma } from "../../src/prisma/calendar";
+import {
+  createCalendarDataPrisma,
+  getCalendarDataPrisma,
+  updateCalendarDataPrisma,
+} from "../../src/prisma/calendar";
 
 export default async function calendar(
   req: NextApiRequest,
@@ -29,5 +33,50 @@ export default async function calendar(
     }
   }
 
-  res.setHeader("Allow", ["GET"]);
+  if (req.method === "POST") {
+    try {
+      const { title, description, start_date, end_date } = req.body;
+
+      const { calendar, error, message } = await createCalendarDataPrisma({
+        title,
+        description,
+        start_date,
+        end_date,
+      });
+
+      if (error) throw new Error(error as string);
+
+      return res.status(200).json({
+        calendar,
+        message,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  if (req.method === "PUT") {
+    try {
+      const { id, title, description, start_date, end_date } = req.body;
+
+      const { calendar, error, message } = await updateCalendarDataPrisma({
+        id,
+        title,
+        description,
+        start_date,
+        end_date,
+      });
+
+      if (error) throw new Error(error as string);
+
+      return res.status(200).json({
+        calendar,
+        message,
+      });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  res.setHeader("Allow", ["GET", "POST", "PUT"]);
 }
