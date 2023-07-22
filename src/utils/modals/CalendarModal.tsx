@@ -1,23 +1,31 @@
-import {Box, Dialog} from "@mui/material";
-import {DialogContent, TextField, DialogContentText, DialogActions, Button} from "@mui/material";
+import { Box, Dialog } from "@mui/material";
+import {
+  DialogContent,
+  TextField,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const CalendarModal = () => {
-  return  <DialogContent>
-    <DialogContentText>
-      Enter Event Name
-    </DialogContentText>
-    <TextField
+  const { register } = useForm();
+
+  return (
+    <DialogContent>
+      <DialogContentText>Enter Event Name</DialogContentText>
+      <TextField
         autoFocus
         margin="normal"
-        id="name"
-        label="Event Name"
-        type="email"
+        {...register("title")}
         variant="standard"
         fullWidth
-        sx={{ width: 500}}
-    />
-    <Button>Confirm</Button>
+        sx={{ width: 500 }}
+      />
+
+      <Button>Confirm</Button>
     </DialogContent>
+  );
 };
 
 export default CalendarModal;

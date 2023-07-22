@@ -18,8 +18,8 @@ interface IModalInfo {
 }
 
 interface IModalSelect {
-    open: boolean;
-    title: string;
+  open: boolean;
+  title: string;
 }
 
 const CalendarContent = () => {
@@ -30,9 +30,9 @@ const CalendarContent = () => {
     endDate: extendedDayJs().toDate(),
   });
   const [openModalSelect, setOpenModalSelect] = useState<IModalSelect>({
-      open: false,
-      title: "",
-  })
+    open: false,
+    title: "",
+  });
 
   const [paramsSearch, setParamsSearch] =
     useState<IParamsGetCalendarDataPrisma>({
@@ -43,16 +43,19 @@ const CalendarContent = () => {
 
   const { data } = useCalendarData(paramsSearch);
 
-    const event = [{
-        title:"New Generation",
-        start:"2023-07-21T00:00:00+07:00",
-        end:"2023-07-21T23:59:59+07:00",
-        allDay:true,
-        resource: {
-            userId:"ec1f6076-9fcc-48c6-b0e9-e39dbc29557x",
-            eventType:"visaExtensionWorkPermit"
-        }
-    }]
+  const event = [
+    {
+      title: "New Generation",
+      start: "2023-07-21T00:00:00+07:00",
+      end: "2023-07-21T23:59:59+07:00",
+      allDay: true,
+      resource: {
+        userId: "ec1f6076-9fcc-48c6-b0e9-e39dbc29557x",
+        eventType: "visaExtensionWorkPermit",
+      },
+    },
+  ];
+
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setOpenModalInfo({
       open: true,
@@ -70,18 +73,18 @@ const CalendarContent = () => {
   };
 
   const handleSelectedEvent = (event: any) => {
-      setOpenModalSelect({
-          open: true,
-          title: event.title
-      });
+    setOpenModalSelect({
+      open: true,
+      title: event.title,
+    });
   };
 
-    const handleCloseModalSelect = () => {
-        setOpenModalSelect({
-            open: false,
-            title: ""
-        });
-    };
+  const handleCloseModalSelect = () => {
+    setOpenModalSelect({
+      open: false,
+      title: "",
+    });
+  };
 
   return (
     <div>
@@ -103,15 +106,15 @@ const CalendarContent = () => {
         isOpen={openModalInfo.open}
         handleClose={handleCloseModal}
       >
-        <CalendarModal/>
+        <CalendarModal />
       </CustomModal>
-        <CustomModal
-            title={openModalSelect.title}
-            isOpen={openModalSelect.open}
-            handleClose={handleCloseModalSelect}
-        >
-            <CalendarSelectModal/>
-        </CustomModal>
+      <CustomModal
+        title={openModalSelect.title}
+        isOpen={openModalSelect.open}
+        handleClose={handleCloseModalSelect}
+      >
+        <CalendarSelectModal />
+      </CustomModal>
     </div>
   );
 };
