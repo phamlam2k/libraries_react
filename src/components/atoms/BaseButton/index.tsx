@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import * as React from "react";
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   primaryStyle?: boolean;
   style?: React.CSSProperties;
   disabled?: boolean;
+  loading?: boolean;
   type?: "button" | "submit" | "reset";
 };
 
@@ -33,11 +34,13 @@ export function BaseButton({
   primaryStyle,
   style,
   disabled,
+  loading,
   type,
 }: Props) {
   let typeButton;
   if (disabledStyle) typeButton = customStyle.disabled;
   else if (primaryStyle) typeButton = customStyle.primary;
+
   return (
     <Button
       onClick={onClick}
@@ -45,7 +48,7 @@ export function BaseButton({
       disabled={disabled}
       type={type}
     >
-      {children}
+      {loading ? <CircularProgress size={20} /> : children}
     </Button>
   );
 }

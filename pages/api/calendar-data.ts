@@ -5,11 +5,14 @@ import {
   getCalendarDataPrisma,
   updateCalendarDataPrisma,
 } from "../../src/prisma/calendar";
+import { getCsrfToken } from "next-auth/react";
 
 export default async function calendar(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
+  const csrfToken = await getCsrfToken({ req });
+
   if (req.method === "GET") {
     try {
       const { page, limit, keyword } = req.query;
