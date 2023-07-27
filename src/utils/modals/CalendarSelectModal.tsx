@@ -1,10 +1,14 @@
-import {Box, Dialog} from "@mui/material";
-import {DialogContent, TextField, DialogContentText, DialogActions, Button} from "@mui/material";
+import {DialogContent, DialogContentText} from "@mui/material";
 
+interface IProps {
+    description: string;
+}
 
-const CalendarModal = () => {
-    return  <DialogContent sx={{ width: 500}}>
-        <Button>Test</Button>
+const CalendarModal = ({description}: IProps) => {
+
+    return <DialogContent sx={{width: 500}}>
+        <DialogContentText textAlign="center">{description}
+        </DialogContentText>
     </DialogContent>
 };
 
