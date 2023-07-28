@@ -1,15 +1,15 @@
-import {DialogContent, DialogContentText} from "@mui/material";
+import { DialogContent, DialogContentText } from "@mui/material";
 
 interface IProps {
-    description: string;
+  description: string;
 }
 
-const CalendarModal = ({description}: IProps) => {
-
-    return <DialogContent sx={{width: 500}}>
-        <DialogContentText textAlign="center">{description}
-        </DialogContentText>
+const CalendarSelectModal = ({ description }: IProps) => {
+  return (
+    <DialogContent sx={{ width: 500 }}>
+      <DialogContentText textAlign="center">{description}</DialogContentText>
     </DialogContent>
+  );
 };
 
-export default CalendarModal;
+export default CalendarSelectModal;
