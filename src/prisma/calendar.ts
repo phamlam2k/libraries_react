@@ -4,6 +4,7 @@ export interface IParamsGetCalendarDataPrisma {
   page: number;
   limit: number;
   keyword: string;
+  accessToken?: string | null;
 }
 
 export interface IParamsCreateCalendarDataPrisma {

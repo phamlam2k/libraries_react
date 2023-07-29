@@ -5,11 +5,17 @@ import {
   getCalendarDataPrisma,
   updateCalendarDataPrisma,
 } from "../../src/prisma/calendar";
+import { verifyToken } from "../../src/utils/jwt";
 
 export default async function calendar(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
+  const accessToken = req.headers.authorization?.split(" ")[1] as string;
+
+  if (!verifyToken(accessToken) || !accessToken)
+    return res.status(401).json({ status: 0, message: "Unauthenization" });
+
   if (req.method === "GET") {
     try {
       const { page, limit, keyword } = req.query;

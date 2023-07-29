@@ -1,28 +1,49 @@
-import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { useSession } from "next-auth/react";
+import { ISODateString } from "next-auth";
 import CustomToolbar from "./customToolbar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useCalendarData from "../../hooks/useCalendarData";
-import { IParamsGetCalendarDataPrisma } from "../../prisma/calendar";
+import {
+  IParamsCreateCalendarDataPrisma,
+  IParamsGetCalendarDataPrisma,
+} from "../../prisma/calendar";
 import CustomModal from "../../common/CustomModal";
 import extendedDayJs from "../../utils/dayjs";
 import CalendarModal from "../../utils/modals/CalendarModal";
-const localizer = dayjsLocalizer(dayjs);
 import CalendarSelectModal from "../../utils/modals/CalendarSelectModal";
+import dayjs from "dayjs";
 
-interface IModalInfo {
+const localizer = dayjsLocalizer(dayjs);
+
+export interface IModalInfo {
   open: boolean;
   startDate: Date;
   endDate: Date;
 }
 
-interface IModalSelect {
+export interface IModalSelect {
   open: boolean;
   title: string;
+  description: string;
+}
+
+interface ISessions {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    accessToken?: string | null;
+  };
+  expires: ISODateString;
 }
 
 const CalendarContent = () => {
+  const { data: session } = useSession() as {
+    data: ISessions;
+  };
+
   const [eventsData, setEventsData] = useState<any[]>([]);
   const [openModalInfo, setOpenModalInfo] = useState<IModalInfo>({
     open: false,
@@ -32,6 +53,7 @@ const CalendarContent = () => {
   const [openModalSelect, setOpenModalSelect] = useState<IModalSelect>({
     open: false,
     title: "",
+    description: "",
   });
 
   const [paramsSearch, setParamsSearch] =
@@ -41,20 +63,21 @@ const CalendarContent = () => {
       keyword: "",
     });
 
-  const { data } = useCalendarData(paramsSearch);
+  const { data } = useCalendarData({
+    ...paramsSearch,
+    accessToken: session?.user?.accessToken,
+  });
 
-  const event = [
-    {
-      title: "New Generation",
-      start: "2023-07-21T00:00:00+07:00",
-      end: "2023-07-21T23:59:59+07:00",
-      allDay: true,
-      resource: {
-        userId: "ec1f6076-9fcc-48c6-b0e9-e39dbc29557x",
-        eventType: "visaExtensionWorkPermit",
-      },
-    },
-  ];
+  const event = useMemo(() => {
+    if (!data) return [];
+
+    return data.calendar.map((item: IParamsCreateCalendarDataPrisma) => ({
+      title: item.title,
+      start: item.start_date,
+      end: item.end_date,
+      description: item.description,
+    }));
+  }, [data]);
 
   const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
     setOpenModalInfo({
@@ -73,9 +96,11 @@ const CalendarContent = () => {
   };
 
   const handleSelectedEvent = (event: any) => {
+    console.log(event);
     setOpenModalSelect({
       open: true,
       title: event.title,
+      description: event.description,
     });
   };
 
@@ -83,6 +108,7 @@ const CalendarContent = () => {
     setOpenModalSelect({
       open: false,
       title: "",
+      description: "",
     });
   };
 
@@ -106,14 +132,14 @@ const CalendarContent = () => {
         isOpen={openModalInfo.open}
         handleClose={handleCloseModal}
       >
-        <CalendarModal />
+        <CalendarModal openModalInfo={openModalInfo} />
       </CustomModal>
       <CustomModal
         title={openModalSelect.title}
         isOpen={openModalSelect.open}
         handleClose={handleCloseModalSelect}
       >
-        <CalendarSelectModal />
+        <CalendarSelectModal description={openModalSelect.description} />
       </CustomModal>
     </div>
   );
