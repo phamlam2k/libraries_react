@@ -7,10 +7,12 @@ const useCalendarData = ({
   page,
   limit,
   keyword,
+  accessToken,
 }: IParamsGetCalendarDataPrisma) => {
   return useQuery({
     queryKey: [QUERY_KEYS.CALENDAR_LIST, page, limit, keyword],
-    queryFn: () => getCalendarDataApi({ page, limit, keyword }),
+    queryFn: () => getCalendarDataApi({ page, limit, keyword, accessToken }),
+    enabled: !!accessToken,
   });
 };
 

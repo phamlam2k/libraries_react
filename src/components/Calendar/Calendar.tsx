@@ -1,6 +1,7 @@
-import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { useSession } from "next-auth/react";
+import { ISODateString } from "next-auth";
 import CustomToolbar from "./customToolbar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import useCalendarData from "../../hooks/useCalendarData";
@@ -12,6 +13,7 @@ import CustomModal from "../../common/CustomModal";
 import extendedDayJs from "../../utils/dayjs";
 import CalendarModal from "../../utils/modals/CalendarModal";
 import CalendarSelectModal from "../../utils/modals/CalendarSelectModal";
+import dayjs from "dayjs";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -27,7 +29,21 @@ export interface IModalSelect {
   description: string;
 }
 
+interface ISessions {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    accessToken?: string | null;
+  };
+  expires: ISODateString;
+}
+
 const CalendarContent = () => {
+  const { data: session } = useSession() as {
+    data: ISessions;
+  };
+
   const [eventsData, setEventsData] = useState<any[]>([]);
   const [openModalInfo, setOpenModalInfo] = useState<IModalInfo>({
     open: false,
@@ -47,7 +63,10 @@ const CalendarContent = () => {
       keyword: "",
     });
 
-  const { data } = useCalendarData(paramsSearch);
+  const { data } = useCalendarData({
+    ...paramsSearch,
+    accessToken: session?.user?.accessToken,
+  });
 
   const event = useMemo(() => {
     if (!data) return [];

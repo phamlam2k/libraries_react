@@ -3,7 +3,6 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import BaseTextFieldForm from "../../components/atoms/BaseTextFieldForm";
 import { BaseButton } from "../../components/atoms/BaseButton";
 import { IModalInfo } from "../../components/Calendar/Calendar";
-import extendedDayJs from "../dayjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCalendarDataApi } from "../api/calendar";
 import { IParamsCreateCalendarDataPrisma } from "../../prisma/calendar";

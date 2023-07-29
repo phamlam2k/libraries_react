@@ -8,9 +8,15 @@ export const getCalendarDataApi = async ({
   page,
   limit,
   keyword,
+  accessToken,
 }: IParamsGetCalendarDataPrisma) => {
   const { data } = await axiosInstance.get(
-    `/calendar-data?page=${page}&limit=${limit}&keyword=${keyword}`
+    `/calendar-data?page=${page}&limit=${limit}&keyword=${keyword}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
   return data;
