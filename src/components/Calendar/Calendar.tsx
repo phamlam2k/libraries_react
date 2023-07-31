@@ -14,6 +14,8 @@ import extendedDayJs from "../../utils/dayjs";
 import CalendarModal from "../../utils/modals/CalendarModal";
 import CalendarSelectModal from "../../utils/modals/CalendarSelectModal";
 import dayjs from "dayjs";
+import { deleteCalendarDataApi } from "../../utils/api/calendar";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
 const localizer = dayjsLocalizer(dayjs);
 
@@ -27,6 +29,7 @@ export interface IModalSelect {
   open: boolean;
   title: string;
   description: string;
+  id: string | number;
 }
 
 interface ISessions {
@@ -42,7 +45,10 @@ interface ISessions {
 const CalendarContent = () => {
   const { data: session } = useSession() as {
     data: ISessions;
-  };
+  }
+
+  const queryClient = useQueryClient();
+  const { mutate: deleteCalendar } = useMutation(deleteCalendarDataApi);
 
   const [eventsData, setEventsData] = useState<any[]>([]);
   const [openModalInfo, setOpenModalInfo] = useState<IModalInfo>({
@@ -54,6 +60,7 @@ const CalendarContent = () => {
     open: false,
     title: "",
     description: "",
+    id: "",
   });
 
   const [paramsSearch, setParamsSearch] =
@@ -87,6 +94,18 @@ const CalendarContent = () => {
     });
   };
 
+  const handleDelete = async () => {
+    if (typeof openModalSelect.id === 'number') {
+      try {
+        await deleteCalendar(openModalSelect.id);
+        queryClient.invalidateQueries(["calendarData"]);
+        handleCloseModalSelect();
+      } catch (error) {
+        console.error("Error deleting calendar item:", error);
+      }
+    }
+  };
+
   const handleCloseModal = () => {
     setOpenModalInfo({
       open: false,
@@ -101,6 +120,7 @@ const CalendarContent = () => {
       open: true,
       title: event.title,
       description: event.description,
+      id: Number(event.id),
     });
   };
 
@@ -109,6 +129,7 @@ const CalendarContent = () => {
       open: false,
       title: "",
       description: "",
+      id: "",
     });
   };
 
@@ -139,7 +160,10 @@ const CalendarContent = () => {
         isOpen={openModalSelect.open}
         handleClose={handleCloseModalSelect}
       >
-        <CalendarSelectModal description={openModalSelect.description} />
+        <CalendarSelectModal
+            description={openModalSelect.description}
+            onDelete={handleDelete}
+        />
       </CustomModal>
     </div>
   );

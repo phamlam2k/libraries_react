@@ -29,3 +29,11 @@ export const createCalendarDataApi = async (
 
   return data;
 };
+
+export const deleteCalendarDataApi = async (id: number) => {
+  const { data } = await axiosInstance.delete(`/calendar-data`, {
+    data: { id },
+  });
+
+  return data;
+};

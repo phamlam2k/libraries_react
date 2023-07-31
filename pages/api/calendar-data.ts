@@ -2,10 +2,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   createCalendarDataPrisma,
+  deleteCalendarDataPrisma,
   getCalendarDataPrisma,
   updateCalendarDataPrisma,
 } from "../../src/prisma/calendar";
 import { verifyToken } from "../../src/utils/jwt";
+import {deleteManyProduct, deleteProduct} from "../../src/prisma/product";
 
 export default async function calendar(
   req: NextApiRequest,
@@ -79,6 +81,29 @@ export default async function calendar(
         calendar,
         message,
       });
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    try {
+      const { id, ids } = req.body;
+
+      if (id) {
+        const { message, error } = await deleteCalendarDataPrisma(id);
+
+        if (error) {
+          return res.status(400).json({
+            message: error,
+          });
+        }
+
+        return res.status(200).json({
+          message,
+        });
+      }
+
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
     }

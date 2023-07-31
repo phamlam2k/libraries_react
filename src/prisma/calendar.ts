@@ -74,3 +74,17 @@ export const updateCalendarDataPrisma = async (
     return { error };
   }
 };
+
+export const deleteCalendarDataPrisma = async (id: number) => {
+  try {
+    const calendar = await prisma.calendar.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return { message: "Calendar delete successfully", data: calendar };
+  } catch (error) {
+    return { error };
+  }
+};
