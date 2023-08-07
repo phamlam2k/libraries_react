@@ -152,7 +152,7 @@ const CalendarContent = () => {
         isOpen={openModalInfo.open}
         handleClose={handleCloseModal}
       >
-        <CalendarModal openModalInfo={openModalInfo} />
+        <CalendarModal openModalInfo={openModalInfo} onClose={handleCloseModal}/>
       </CustomModal>
       <CustomModal
         title={openModalSelect.title}

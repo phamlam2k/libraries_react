@@ -12,6 +12,7 @@ import {useSession} from "next-auth/react";
 
 interface Props {
   openModalInfo: IModalInfo;
+  onClose: () => void;
 }
 
 interface IField {
@@ -29,19 +30,20 @@ interface ISessions {
   expires: ISODateString;
 }
 
-const CalendarModal = ({ openModalInfo }: Props) => {
+const CalendarModal = ({ openModalInfo, onClose }: Props) => {
   const { data: session } = useSession() as {
     data: ISessions;
   }
   const methods = useForm<IField>();
   const queryClient = useQueryClient();
 
+
   const createCalendar = useMutation({
     mutationFn: (data: IParamsCreateCalendarDataPrisma)=>
         createCalendarDataApi(session?.user?.accessToken, data),
-    onSuccess: (data: { message: string }) => {
-      alert(data.message);
+    onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEYS.CALENDAR_LIST]);
+      onClose();
     },
   });
 
@@ -55,7 +57,7 @@ const CalendarModal = ({ openModalInfo }: Props) => {
   };
 
   return (
-    <DialogContent sx={{ width: 500 }}>
+      <DialogContent sx={{ width: 500 }}>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleCreateCalendar)}>
           <BaseTextFieldForm keyTextField="title" label="Title" />
@@ -75,7 +77,7 @@ const CalendarModal = ({ openModalInfo }: Props) => {
         </form>
       </FormProvider>
     </DialogContent>
-  );
+);
 };
 
 export default CalendarModal;
