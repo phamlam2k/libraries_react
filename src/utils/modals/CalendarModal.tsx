@@ -7,6 +7,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCalendarDataApi } from "../api/calendar";
 import { IParamsCreateCalendarDataPrisma } from "../../prisma/calendar";
 import { QUERY_KEYS } from "../keys";
+import {ISODateString} from "next-auth";
+import {useSession} from "next-auth/react";
 
 interface Props {
   openModalInfo: IModalInfo;
@@ -17,13 +19,26 @@ interface IField {
   description: string;
 }
 
+interface ISessions {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    accessToken?: string | null;
+  };
+  expires: ISODateString;
+}
+
 const CalendarModal = ({ openModalInfo }: Props) => {
+  const { data: session } = useSession() as {
+    data: ISessions;
+  }
   const methods = useForm<IField>();
   const queryClient = useQueryClient();
 
   const createCalendar = useMutation({
-    mutationFn: (data: IParamsCreateCalendarDataPrisma) =>
-      createCalendarDataApi(data),
+    mutationFn: (data: IParamsCreateCalendarDataPrisma)=>
+        createCalendarDataApi(session?.user?.accessToken, data),
     onSuccess: (data: { message: string }) => {
       alert(data.message);
       queryClient.invalidateQueries([QUERY_KEYS.CALENDAR_LIST]);

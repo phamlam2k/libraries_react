@@ -23,15 +23,25 @@ export const getCalendarDataApi = async ({
 };
 
 export const createCalendarDataApi = async (
+    accessToken: string | null | undefined,
   formData: IParamsCreateCalendarDataPrisma
 ) => {
-  const { data } = await axiosInstance.post("/calendar-data", formData);
+  const { data } = await axiosInstance.post("/calendar-data", formData,
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }
+  );
 
   return data;
 };
 
-export const deleteCalendarDataApi = async (id: number) => {
+export const deleteCalendarDataApi = async (accessToken: string | null | undefined, id: number) => {
   const { data } = await axiosInstance.delete(`/calendar-data`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
     data: { id },
   });
 

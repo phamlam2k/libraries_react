@@ -16,7 +16,6 @@ import CalendarSelectModal from "../../utils/modals/CalendarSelectModal";
 import dayjs from "dayjs";
 import { deleteCalendarDataApi } from "../../utils/api/calendar";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-
 const localizer = dayjsLocalizer(dayjs);
 
 export interface IModalInfo {
@@ -29,7 +28,7 @@ export interface IModalSelect {
   open: boolean;
   title: string;
   description: string;
-  id: string | number;
+  id: number;
 }
 
 interface ISessions {
@@ -48,7 +47,7 @@ const CalendarContent = () => {
   }
 
   const queryClient = useQueryClient();
-  const { mutate: deleteCalendar } = useMutation(deleteCalendarDataApi);
+  const { mutate: deleteCalendar } = useMutation((id: number) => deleteCalendarDataApi(session?.user?.accessToken, id));
 
   const [eventsData, setEventsData] = useState<any[]>([]);
   const [openModalInfo, setOpenModalInfo] = useState<IModalInfo>({
@@ -60,7 +59,7 @@ const CalendarContent = () => {
     open: false,
     title: "",
     description: "",
-    id: "",
+    id: 0,
   });
 
   const [paramsSearch, setParamsSearch] =
@@ -129,7 +128,7 @@ const CalendarContent = () => {
       open: false,
       title: "",
       description: "",
-      id: "",
+      id: 0,
     });
   };
 
